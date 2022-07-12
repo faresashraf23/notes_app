@@ -23,6 +23,9 @@ class AppEditNoteState extends AppStates {}
 
 class AppChangeIndexState extends AppStates {}
 
+class AppdeletingState extends AppStates {}
+
+
 
 
 

@@ -15,9 +15,11 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitial());
 
   static AppCubit get(context) => BlocProvider.of(context);
+
   List notes = [];
   late Database database;
   int pressedIndex = 1;
+  int selectedIndex = 1;
 
   void createDatabase() async {
     String pathDatabase = await getDatabasesPath();
@@ -86,14 +88,17 @@ class AppCubit extends Cubit<AppStates> {
 
   void deleteDatabase(int id) async {
     database.rawDelete('DELETE FROM Notes WHERE id = ?', [id]).then((value) {
-      getDatabase(database);
       emit(AppdeleteDatabaseState());
+      getDatabase(database);
+
+      emit(AppGetDatabaseState());
     });
   }
-  
 
   changeIndex(index) {
     pressedIndex = index;
+    selectedIndex = notes[index]['id'];
+
     emit(AppChangeIndexState());
   }
 }

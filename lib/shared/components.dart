@@ -1,12 +1,10 @@
 // ignore_for_file: avoid_print
 
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
-import '../Screens/add_notes.dart';
 import '../Screens/view_notes.dart';
 import '../business_logic/cubit/app_cubit.dart';
 import 'constants.dart';
@@ -21,24 +19,63 @@ Widget defaultTextAnimated(
           fontFamily: 'Agne',
           color: Colors.white,
         ),
-        child: AnimatedTextKit(
-          totalRepeatCount: 1,
-          animatedTexts: [
-            TypewriterAnimatedText(
-              text,
-              speed: const Duration(milliseconds: 100),
-            ),
-          ],
-          onTap: () {
+        child: GestureDetector(
+          child: AnimatedTextKit(
+            totalRepeatCount: 1,
+            animatedTexts: [
+              TypewriterAnimatedText(
+                text,
+                speed: const Duration(milliseconds: 100),
+              ),
+            ],
+            onTap: () {
+              cubit.changeIndex(index);
+              print("selected index ${cubit.pressedIndex}");
+              print("delete index = ${cubit.selectedIndex}");
+
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ViewNotesScreen()));
+            },
+          ),
+          onLongPress: () {
             cubit.changeIndex(index);
-            
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ViewNotesScreen()));
-            print("Tap Event");
+            _alertDialog(context: context);
+            print("Long press");
           },
         ),
       ),
     );
+
+_alertDialog({
+  required context,
+}) async {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Delete"),
+      content: const Text("You want to delete this item?"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            AppCubit cubit = AppCubit.get(context);
+
+            cubit.deleteDatabase(cubit.selectedIndex);
+            print("selecedIndex = ${cubit.selectedIndex}}");
+
+            Navigator.pop(context);
+          },
+          child: const Text("Yes"),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text("No"),
+        ),
+      ],
+    ),
+  );
+}
 
 Widget defaultStaggeredGridView(List notes, AppCubit cubit) => Expanded(
       child: StaggeredGridView.countBuilder(
