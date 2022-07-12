@@ -114,8 +114,10 @@ Widget defaultFormFeild({
   required Color hintColor,
   required FontWeight weight,
   required double size,
+  String? initialText,
 }) =>
     TextFormField(
+      restorationId: initialText,
       cursorColor: titleColor,
       maxLines: null,
       minLines: 1,
@@ -139,13 +141,16 @@ Widget defaultFormFeild({
     );
 
 Widget defaultFloatingActionButton(
-        BuildContext context, IconData icon, Pageroute) =>
+  BuildContext context,
+  IconData icon,
+  pageroute,
+) =>
     FloatingActionButton(
       autofocus: true,
       elevation: 50.0,
       backgroundColor: primaryColor,
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: Pageroute));
+        Navigator.push(context, MaterialPageRoute(builder: pageroute));
       },
       child: Icon(
         icon,
@@ -187,7 +192,7 @@ Widget defaultAppBar({
             borderRadius: BorderRadius.circular(10.0),
           ),
           margin: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
-          width: 60.0,
+          // width: 60.0,
           child: IconButton(
             onPressed: iconPress,
             icon: icon,

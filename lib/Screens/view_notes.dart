@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:note_app/Screens/edit_note.dart';
 import 'package:note_app/Screens/home_layout.dart';
 import 'package:note_app/shared/components.dart';
 import 'package:note_app/shared/constants.dart';
@@ -107,7 +108,10 @@ class ViewNotesScreen extends StatelessWidget {
             ),
           ),
           floatingActionButton: defaultFloatingActionButton(
-              context, Icons.edit, (context) => HomeLayout()),
+            context,
+            Icons.edit,
+            (context) => EditNoteScreen(),
+          ),
         );
       },
     );

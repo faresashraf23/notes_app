@@ -7,10 +7,12 @@ import 'package:note_app/shared/components.dart';
 
 import '../shared/constants.dart';
 
-class AddNoteScreen extends StatelessWidget {
-  AddNoteScreen({Key? key}) : super(key: key);
+class EditNoteScreen extends StatelessWidget {
+  EditNoteScreen({Key? key}) : super(key: key);
 
-
+  var titleController = TextEditingController();
+  var messageController = TextEditingController();
+  var dateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class AddNoteScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     CupertinoIcons.back,
                   ),
                 ),
@@ -55,21 +57,23 @@ class AddNoteScreen extends StatelessWidget {
                   width: 60.0,
                   child: IconButton(
                     onPressed: () {
-                      cubit.dateController.text =
+                      dateController.text =
                           DateFormat.yMMMd().format(DateTime.now()).toString();
                       cubit
-                          .insertDatabase(
-                        title: cubit.titleController.text,
-                        message: cubit.messageController.text,
-                        date: cubit.dateController.text,
+                          .updateDatabase(
+                        title: titleController.text,
+                        date: dateController.text,
+                        message: messageController.text,
+                        id: cubit.selectedIndex,
                       )
                           .then((_) {
                         Navigator.pop(context);
                       });
-                      print(cubit.notes);
-                      print("database = ${cubit.database}");
                     },
-                    icon: Text("Save"),
+                    icon: const Text(
+                      "Update",
+                      style: TextStyle(fontSize: 12.0),
+                    ),
                     // splashRadius: 20.0,
                   ),
                 ),
@@ -85,7 +89,8 @@ class AddNoteScreen extends StatelessWidget {
                         maxHeight: double.infinity,
                       ),
                       child: defaultFormFeild(
-                          mycontroller: cubit.titleController,
+                          initialText: cubit.notes[cubit.pressedIndex]['title'],
+                          mycontroller: titleController,
                           textInputType: TextInputType.multiline,
                           textInputAction: TextInputAction.newline,
                           hint: "Title",
@@ -101,7 +106,8 @@ class AddNoteScreen extends StatelessWidget {
                         maxHeight: double.infinity,
                       ),
                       child: defaultFormFeild(
-                        mycontroller: cubit.messageController,
+                        initialText: cubit.notes[cubit.pressedIndex]['message'],
+                        mycontroller: messageController,
                         textInputType: TextInputType.multiline,
                         textInputAction: TextInputAction.newline,
                         hint: "Type something...",

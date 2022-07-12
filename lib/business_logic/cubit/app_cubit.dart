@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -20,6 +21,10 @@ class AppCubit extends Cubit<AppStates> {
   late Database database;
   int pressedIndex = 1;
   int selectedIndex = 1;
+
+  var titleController = TextEditingController();
+  var messageController = TextEditingController();
+  var dateController = TextEditingController();
 
   void createDatabase() async {
     String pathDatabase = await getDatabasesPath();
@@ -88,10 +93,24 @@ class AppCubit extends Cubit<AppStates> {
 
   void deleteDatabase(int id) async {
     database.rawDelete('DELETE FROM Notes WHERE id = ?', [id]).then((value) {
-      emit(AppdeleteDatabaseState());
-      getDatabase(database);
+      emit(AppdeletingState());
 
-      emit(AppGetDatabaseState());
+      getDatabase(database);
+      emit(AppdeleteDatabaseState());
+    });
+  }
+
+  updateDatabase({
+    required String title,
+    required String date,
+    required String message,
+    required int id,
+  }) async {
+    database.rawUpdate(
+        'UPDATE Notes SET title = ?, date = ?, message = ? WHERE id = ?',
+        [title, date, message, id]).then((value) {
+      getDatabase(database);
+      emit(AppupdateDatabaseState());
     });
   }
 
